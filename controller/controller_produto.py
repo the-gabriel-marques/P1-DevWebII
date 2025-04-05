@@ -1,8 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, constr, condecimal, conint
 from models import model_produto
+from starlette.status import HTTP_302_FOUND
 
 router = APIRouter()
+templates = Jinja2Templates(directory="templates")
+
+@router.get("/cadastro", response_class=HTMLResponse)
+def formulario_produto(request: Request, mensagem: str = ""):
+    return templates.TemplateResponse("index.html", {"request": request, "mensagem": mensagem})
 
 class ProdutoAtualizar(BaseModel):
     nome: constr(min_length=3)
@@ -27,9 +35,21 @@ def buscar_produto(idProduto: int):
     return produto
 
 @router.post("/produtos")
-def cadastrar_produto(produto: ProdutoCriar):
-    model_produto.inserir_produto(produto.nome, float(produto.preco), produto.estoque)
-    return {"mensagem": "Produto cadastrado com sucesso"}
+async def cadastrar_produto(request: Request):
+    form = await request.json()
+    nome = form.get("nome")
+    preco = form.get("preco")
+    estoque = form.get("estoque")
+
+    if not nome or len(nome) < 3:
+        return RedirectResponse(url="/cadastro?mensagem=Nome inválido", status_code=HTTP_302_FOUND)
+    if not preco or float(preco) <= 0:
+        return RedirectResponse(url="/cadastro?mensagem=Preço inválido", status_code=HTTP_302_FOUND)
+    if estoque is None or int(estoque) < 0:
+        return RedirectResponse(url="/cadastro?mensagem=Estoque inválido", status_code=HTTP_302_FOUND)
+
+    model_produto.inserir_produto(nome, float(preco), int(estoque))
+    return RedirectResponse(url="/cadastro?mensagem=Produto cadastrado com sucesso!", status_code=HTTP_302_FOUND)
 
 @router.put("/produtos/{idProduto}")
 def atualizar_produto(idProduto: int, dados: ProdutoAtualizar):
