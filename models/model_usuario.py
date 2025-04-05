@@ -16,38 +16,65 @@ def criar_tabela():
     db.close()
 
 def listar_usuarios():
-    db = conectar()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM usuarios')
-    usuarios = cursor.fetchall()
-    db.close()
-    return usuarios
+    try:
+        db = conectar()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM usuarios')
+        usuarios = cursor.fetchall()
+        return usuarios
+    except Exception as e:
+        print(f"Erro ao listar usuários: {e}")
+        return []
+    finally:
+        if db.is_connected():
+            db.close()
 
 def buscar_usuario_por_id(idUsuario):
-    db = conectar()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM usuarios WHERE idUsuario = %s', (idUsuario,))
-    usuario = cursor.fetchone()
-    db.close()
-    return usuario
+    try:
+        db = conectar()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM usuarios WHERE idUsuario = %s', (idUsuario,))
+        usuario = cursor.fetchone()
+        return usuario
+    except Exception as e:
+        print(f"Erro ao buscar usuário por ID: {e}")
+        return None
+    finally:
+        if db.is_connected():
+            db.close()
 
 def inserir_usuario(nome, email, senha):
-    db = conectar()
-    cursor = db.cursor()
-    cursor.execute('INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)', (nome, email, senha))
-    db.commit()
-    db.close()
+    try:
+        db = conectar()
+        cursor = db.cursor()
+        cursor.execute('INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)', (nome, email, senha))
+        db.commit()
+    except Exception as e:
+        print(f"Erro ao inserir usuário: {e}")
+    finally:
+        if db.is_connected():
+            db.close()
 
 def atualizar_usuario(idUsuario, nome, email, senha):
-    db = conectar()
-    cursor = db.cursor()
-    cursor.execute('UPDATE usuarios SET nome=%s, email=%s, senha=%s WHERE idUsuario=%s', (nome, email, senha, idUsuario))
-    db.commit()
-    db.close()
+    try:
+        db = conectar()
+        cursor = db.cursor()
+        cursor.execute('UPDATE usuarios SET nome=%s, email=%s, senha=%s WHERE idUsuario=%s', (nome, email, senha, idUsuario))
+        db.commit()
+    except Exception as e:
+        print(f"Erro ao atualizar usuário: {e}")
+    finally:
+        if db.is_connected():
+            db.close()
 
 def excluir_usuario(idUsuario):
-    db = conectar()
-    cursor = db.cursor()
-    cursor.execute('DELETE FROM usuarios WHERE idUsuario=%s', (idUsuario,))
-    db.commit()
-    db.close()
+    try:
+        db = conectar()
+        cursor = db.cursor()
+        cursor.execute('DELETE FROM usuarios WHERE idUsuario=%s', (idUsuario,))
+        db.commit()
+    except Exception as e:
+        print(f"Erro ao excluir usuário: {e}")
+    finally:
+        if db.is_connected():
+            db.close()
