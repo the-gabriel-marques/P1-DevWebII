@@ -11,6 +11,10 @@
 </head>
 <body>
   <h2>Cadastro de Produtos</h2>
+  {% if mensagem %}
+  <p style="color: green;">{{ mensagem }}</p>
+   {% endif %}
+
   <form id="produtoForm">
     <label for="nome">Nome do Produto:</label>
     <input type="text" id="nome" name="nome" required minlength="3">
@@ -40,7 +44,7 @@
 
       if (response.ok) {
         alert("Produto cadastrado com sucesso!");
-        location.reload();  // Recarregar a página
+        location.reload(); 
       } else {
         alert("Erro ao cadastrar o produto!");
       }
