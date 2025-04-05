@@ -1,8 +1,18 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List
 
-app = Flask(__name__)
-CORS(app) 
+app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 produtos = []
@@ -10,70 +20,76 @@ usuarios = []
 produto_id_counter = 1
 
 
-@app.route("/produtos", methods=["GET"])
-def listar_produtos():
-    return jsonify(produtos)
 
-@app.route("/produtos/<int:id>", methods=["GET"])
-def obter_produto(id):
+class Produto(BaseModel):
+    nome: str
+    preco: float
+    estoque: int
+
+class ProdutoOut(Produto):
+    id: int
+
+class Usuario(BaseModel):
+    nome: str
+    email: str
+    senha: str
+
+
+# Endpoints de produtos (Confirmar se funciona)
+@app.get("/produtos", response_model=List[ProdutoOut])
+def listar_produtos():
+    return produtos
+
+@app.get("/produtos/{id}", response_model=ProdutoOut)
+def obter_produto(id: int):
     for produto in produtos:
         if produto["id"] == id:
-            return jsonify(produto)
-    return jsonify({"erro": "Produto não encontrado"}), 404
+            return produto
+    raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-@app.route("/produtos", methods=["POST"])
-def criar_produto():
+@app.post("/produtos", response_model=ProdutoOut, status_code=201)
+def criar_produto(produto: Produto):
     global produto_id_counter
-    dados = request.json
-    if not all(k in dados for k in ("nome", "preco", "estoque")):
-        return jsonify({"erro": "Campos obrigatórios faltando"}), 400
-
     novo = {
         "id": produto_id_counter,
-        "nome": dados["nome"],
-        "preco": float(dados["preco"]),
-        "estoque": int(dados["estoque"])
+        "nome": produto.nome,
+        "preco": produto.preco,
+        "estoque": produto.estoque
     }
     produtos.append(novo)
     produto_id_counter += 1
-    return jsonify(novo), 201
+    return novo
 
-@app.route("/produtos/<int:id>", methods=["PUT"])
-def atualizar_produto(id):
-    dados = request.json
-    for produto in produtos:
-        if produto["id"] == id:
-            produto["nome"] = dados.get("nome", produto["nome"])
-            produto["preco"] = float(dados.get("preco", produto["preco"]))
-            produto["estoque"] = int(dados.get("estoque", produto["estoque"]))
-            return jsonify(produto)
-    return jsonify({"erro": "Produto não encontrado"}), 404
+@app.put("/produtos/{id}", response_model=ProdutoOut)
+def atualizar_produto(id: int, produto: Produto):
+    for p in produtos:
+        if p["id"] == id:
+            p["nome"] = produto.nome
+            p["preco"] = produto.preco
+            p["estoque"] = produto.estoque
+            return p
+    raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-@app.route("/produtos/<int:id>", methods=["DELETE"])
-def deletar_produto(id):
+@app.delete("/produtos/{id}")
+def deletar_produto(id: int):
     for produto in produtos:
         if produto["id"] == id:
             produtos.remove(produto)
-            return jsonify({"mensagem": "Produto removido com sucesso"})
-    return jsonify({"erro": "Produto não encontrado"}), 404
+            return {"mensagem": "Produto removido com sucesso"}
+    raise HTTPException(status_code=404, detail="Produto não encontrado")
 
 
-@app.route("/usuarios", methods=["POST"])
-def criar_usuario():
-    dados = request.json
-    if not all(k in dados for k in ("nome", "email", "senha")):
-        return jsonify({"erro": "Campos obrigatórios faltando"}), 400
-
+# Endpoints de usuários (Confirmar se está certo, tenho dúvidas)
+@app.post("/usuarios", status_code=201)
+def criar_usuario(usuario: Usuario):
     novo = {
         "id": len(usuarios) + 1,
-        "nome": dados["nome"],
-        "email": dados["email"],
-        "senha": dados["senha"]  
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "senha": usuario.senha  
     }
     usuarios.append(novo)
-    return jsonify(novo), 201
+    return novo
 
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
