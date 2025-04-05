@@ -13,10 +13,10 @@ class ProdutoAtualizar(BaseModel):
     preco: condecimal(gt=0)
     estoque: conint(ge=0)
 
-@router.get("/cadastro", response_class=HTMLResponse)
+@router.get("/cadastro_produto", response_class=HTMLResponse)
 def formulario_produto(request: Request, mensagem: str = ""):
     try:
-        return templates.TemplateResponse("index.html", {"request": request, "mensagem": mensagem})
+        return templates.TemplateResponse("produtos.html", {"request": request, "mensagem": mensagem})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
 
@@ -46,14 +46,14 @@ async def cadastrar_produto(request: Request):
         estoque = form.get("estoque")
 
         if not nome or len(nome) < 3:
-            return RedirectResponse(url="/cadastro?mensagem=Nome inválido", status_code=HTTP_302_FOUND)
+            return RedirectResponse(url="/cadastro_produto?mensagem=Nome inválido", status_code=HTTP_302_FOUND)
         if not preco or float(preco) <= 0:
-            return RedirectResponse(url="/cadastro?mensagem=Preço inválido", status_code=HTTP_302_FOUND)
+            return RedirectResponse(url="/cadastro_produto?mensagem=Preço inválido", status_code=HTTP_302_FOUND)
         if estoque is None or int(estoque) < 0:
-            return RedirectResponse(url="/cadastro?mensagem=Estoque inválido", status_code=HTTP_302_FOUND)
+            return RedirectResponse(url="/cadastro_produto?mensagem=Estoque inválido", status_code=HTTP_302_FOUND)
 
         model_produto.inserir_produto(nome, float(preco), int(estoque))
-        return RedirectResponse(url="/cadastro?mensagem=Produto cadastrado com sucesso!", status_code=HTTP_302_FOUND)
+        return RedirectResponse(url="/cadastro_produto?mensagem=Produto cadastrado com sucesso!", status_code=HTTP_302_FOUND)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
 
