@@ -98,6 +98,8 @@ P1-DEVWEBII/ <br>
 
 - Ao preencher todos os campos corretamente, será enviado uma mensagem de confirmação
 
+![image](https://github.com/user-attachments/assets/a6e8de4f-eb63-4512-992f-f8d38bc71bea)
+
 ## 🟣 Utilizando o PostMan
 
 ### Rotas da API para serem utilizadas
