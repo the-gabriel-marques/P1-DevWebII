@@ -136,3 +136,54 @@ P1-DEVWEBII/ <br>
 - DELETE (/usaurios/{id})
 
 ![image](https://github.com/user-attachments/assets/9fd6e085-6382-49dd-8c65-e6c2bcec757f)
+
+- GET (/produtos)
+
+![image](https://github.com/user-attachments/assets/a028198c-b4e8-4940-bb32-e12c6db70e52)
+
+- GET (/produtos/{id})
+
+![image](https://github.com/user-attachments/assets/91ce060c-2adf-497a-afd4-7975a4911642)
+
+- POST (/produtos)
+
+![image](https://github.com/user-attachments/assets/993508a1-bb27-481b-872c-2d0df535d964)
+
+- PUT (/produtos/{id})
+
+![image](https://github.com/user-attachments/assets/3dcb7696-c044-400f-9a40-7bae107903e0)
+
+- DELETE (/produtos/{id})
+
+![image](https://github.com/user-attachments/assets/6fc3b0e7-cc5a-4a30-87f2-5c1b485b519e)
+
+## 🟤Desenvolvedores do Projeto
+
+<table>
+  <tr>
+      <td align="center">
+      <a href="https://github.com/allanmsilva23">
+        <img src="https://github.com/allanmsilva23.png" width="100px;" alt="Gabriel"/><br />
+        <sub><b>Allan Martins</b></sub>
+      </a>
+      <br />
+      <small>Banco de Dados</small>
+    </td>
+    <td align="center">
+      <a href="https://github.com/the-gabriel-marques">
+        <img src="https://github.com/the-gabriel-marques.png" width="100px;" alt="Gabriel"/><br />
+        <sub><b>Gabriel Marques</b></sub>
+      </a>
+      <br />
+      <small>Back-end & Docs</small>
+    </td>
+    <td align="center">
+      <a href="https://github.com/VitorVraal">
+        <img src="https://github.com/VitorVraal.png" width="100px;" alt="Fulano"/><br />
+        <sub><b>Vitor Luiz</b></sub>
+      </a>
+      <br />
+      <small>Front-end</small>
+    </td>
+  </tr>
+</table>
