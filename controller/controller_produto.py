@@ -53,7 +53,7 @@ async def cadastrar_produto(request: Request):
             return RedirectResponse(url="/cadastro_produto?mensagem=Estoque inválido", status_code=HTTP_302_FOUND)
 
         model_produto.inserir_produto(nome, float(preco), int(estoque))
-        return RedirectResponse(url="/cadastro_produto?mensagem=Produto cadastrado com sucesso!", status_code=HTTP_302_FOUND)
+        return {"mensagem":"Produto cadastrado com sucesso!"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
 
