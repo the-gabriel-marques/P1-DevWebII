@@ -1,5 +1,5 @@
 # ⚙️ Sistema de Gerenciamento de Produtos e Usuários
-Projeto de avaliação para a P1 de Desenvolvimento Web II
+Projeto de avaliação para a P1 de Desenvolvimento Web II <br>
 (O relatório técnico da atividade está anexado no Teams)
 
 ## 🔴 Funcionalidades
